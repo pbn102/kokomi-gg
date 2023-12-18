@@ -1,5 +1,5 @@
 function Info() {
-  return <div>Contact</div>;
+  return <div>Info</div>;
 }
 
 export default Info;
