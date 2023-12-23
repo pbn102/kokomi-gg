@@ -6,7 +6,7 @@ const Characters = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const user = await fetch('https://kokomi-api-pols.onrender.com/users/600035485').then((response) => response.json());
+        const user = await fetch('https://notes-app-api-orcin.vercel.app/api/users/600035485').then((response) => response.json());
         const characters = user.characters;
 
         if (!characters || Object.keys(characters).length === 0) {
