@@ -55,19 +55,19 @@ const AddUser = () => {
         setCharacterData(characters);
     };
 
-
     return (
         <div className="hero min-h-screen">
             <div className="hero-content text-center">
                 <div>
                     <h1 className="text-5xl font-bold">No Characters Found.</h1>
                     <div className="flex flex-col w-full lg:flex-row py-6">
-                        <button
+                        <label
+                            htmlFor="uid_modal"
                             className="h-20 rounded-box btn"
-                            onClick={() => ((document.getElementById("uid_modal") as HTMLDialogElement).showModal())}
                         >
                             Import Characters from UID
-                        </button>
+                        </label>
+                        <input type="checkbox" id="uid_modal" className="modal-toggle" />
                         <dialog id="uid_modal" className="modal modal-bottom sm:modal-middle">
                             <div className="modal-box">
                                 <h3 className="font-bold text-lg text-left pb-3">Enter UID</h3>
@@ -78,11 +78,16 @@ const AddUser = () => {
                                         className={`rounded-box input input-bordered pl-12 ${flash ? 'input-error' : ''}`}
                                         value={uid}
                                         onInput={handleInputChange}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                handleSearchClick();
+                                            }
+                                        }}
                                     />
                                     <div className="absolute top-1/2 transform -translate-y-1/2">
-                                        <button className="btn btn-ghost btn-circle">
+                                        <label className="btn btn-ghost btn-circle">
                                             <SearchIconButton onClick={handleSearchClick} />
-                                        </button>
+                                        </label>
                                     </div>
                                 </div>
                                 {characterData.length > 0 && (
@@ -97,13 +102,12 @@ const AddUser = () => {
                                         </ul>
                                     </div>
                                 )}
-                                <form method="dialog">
-                                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                                </form>
+                                <label htmlFor="uid_modal" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                                    ✕
+                                </label>
                             </div>
-                            <form method="dialog" className="modal-backdrop">
-                                <button />
-                            </form>
+                            <label htmlFor="uid_modal" className="modal-backdrop">
+                            </label>
                         </dialog>
                         <div className="divider lg:divider-horizontal">OR</div>
                         <div className="h-20 rounded-box btn">Import Characters from JSON</div>
