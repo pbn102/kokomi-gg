@@ -1,16 +1,20 @@
 // import React, { useState, useEffect } from 'react';
 import AddUser from '../../Components/AddUser/AddUser';
 
-const Characters = () => {
+interface CharactersProps {
+  themePreference: string;
+}
+
+const Characters = ({ themePreference }: CharactersProps) => {
   const getDataFromLocalStorage = (_data: string): boolean => {
     return false
   }
 
   return (
     <div className="flex flex-wrap">
-      {getDataFromLocalStorage("characters") ?
+      { getDataFromLocalStorage("characters") ?
         "Characters found from local storage" :
-        <AddUser />
+        <AddUser themePreference={themePreference}/>
       }
     </div>
   );
