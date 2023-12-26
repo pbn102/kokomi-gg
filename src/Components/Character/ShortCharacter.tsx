@@ -16,6 +16,7 @@ const ShortCharacter: React.FC<ShortCharacterProps> = ({ picUrl, name, level, ma
             <img
                 src={picUrl}
                 alt={name}
+                loading="eager"
                 className="mx-auto mb-2 avatar rounded-full w-16 sm:w-24"
             />
             <p className="text-sm font-semibold" style={characterNameStyle}>

@@ -1,19 +1,42 @@
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState, useEffect, useRef } from "react";
 import SearchIconButton from "../Icons/SearchIconButton";
 import { GenshinAccount, GenshinCharacter } from "../../Types/Genshin";
 import ShortCharacterList from "../CharacterList/ShortCharacterList";
+import ShortUserInfo from "../UserInfo/ShortUserInfo";
+import './CustomScrollBar.css';
 
 interface UidInputModalProps {
     characterData: GenshinCharacter[];
     populateCharacters: (characters: GenshinCharacter[]) => void;
     themePreference: string;
-}
+};
 
 const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCharacters, themePreference }) => {
     const [uid, setUid] = useState('');
     const [flash, setFlash] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [previousUid, setPreviousUid] = useState<string | null>(null);
+    const [userData, setUserData] = useState<GenshinAccount>();
+    const inputRef = useRef<HTMLInputElement>(null); // Add a ref for the input element
+
+    useEffect(() => {
+        const handleEscapeKey = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                closeUidModal();
+            }
+        };
+
+        document.addEventListener('keydown', handleEscapeKey);
+
+        // Focus on the input element when the component mounts
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscapeKey);
+        };
+    }, []);
 
     const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
         const inputElement = event.target as HTMLInputElement;
@@ -30,7 +53,7 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
             setIsLoading(true);
             getCharacterData(uid);
             setPreviousUid(uid);
-        } else { // Invalid UID or same UID, signal user
+        } else {
             setFlash(true);
             setTimeout(() => {
                 setFlash(false);
@@ -48,6 +71,7 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
             })
             .then((userData: GenshinAccount) => {
                 populateCharacters(userData.characters);
+                setUserData(userData);
             })
             .catch((error) => {
                 console.error(error);
@@ -58,11 +82,18 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
             });
     };
 
+    const closeUidModal = () => {
+        const uidModalCheckbox = document.getElementById('uid_modal') as HTMLInputElement;
+        if (uidModalCheckbox) {
+            uidModalCheckbox.checked = false;
+        }
+    };
+
     return (
         <div>
             <input type="checkbox" id="uid_modal" className="modal-toggle" />
             <div className="modal modal-bottom sm:modal-middle" role="dialog">
-                <div className="modal-box w-full sm:max-w-5xl">
+                <div className="modal-box w-full sm:max-w-5xl min-h-1/3 uid-input-modal-container">
                     <h3 className="font-bold text-lg text-left pb-3">Enter UID</h3>
                     <div className="relative flex items-center">
                         <input
@@ -76,6 +107,7 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
                                     handleSearchClick();
                                 }
                             }}
+                            ref={inputRef} // Assign the ref to the input element
                         />
                         <div className="absolute top-1/2 transform -translate-y-1/2">
                             <label className={`btn btn-ghost btn-circle ${flash ? 'animate-shake animate-duration-[250ms]' : ''}`}>
@@ -86,20 +118,26 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
                             </label>
                         </div>
                     </div>
-                    {characterData.length > 0 ?
+                    {userData && characterData.length > 0 ? (
                         <div className="py-6">
-                            <h2 className="text-xl font-semibold pb-6">Imported Characters:</h2>
-                            <div className="flex justify-center">
+                            <h2 className="text-xl font-semibold">Select Characters to Import</h2>
+                            <ShortUserInfo
+                                name={userData.name}
+                                picUrl={userData.profilePicUrl}
+                                adventureRank={userData.adventure_rank}
+                                worldLevel={userData.world_level}
+                                signature={userData.signature}
+                            />
+                            <div className="flex justify-center mt-4">
                                 <ShortCharacterList characterData={characterData} themePreference={themePreference} />
                             </div>
                         </div>
-                        : null}
+                    ) : null}
                     <label htmlFor="uid_modal" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                         ✕
                     </label>
                 </div>
-                <label htmlFor="uid_modal" className="modal-backdrop">
-                </label>
+                <label htmlFor="uid_modal" className="modal-backdrop"></label>
             </div>
         </div>
     );

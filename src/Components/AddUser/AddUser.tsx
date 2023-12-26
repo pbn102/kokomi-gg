@@ -13,7 +13,7 @@ const AddUser = ({ themePreference }: AddUserProps) => {
     };
 
     return (
-        <div className="hero min-h-screen">
+        <div className="fixed hero min-h-screen">
             <div className="hero-content text-center">
                 <div>
                     <h1 className="text-5xl font-bold">No Characters Found.</h1>
