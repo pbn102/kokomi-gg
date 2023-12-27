@@ -9,13 +9,23 @@ enum GenshinElement {
 }
 
 const elementColorMap: Record<GenshinElement, string> = {
-    Wind: "#B3DEC1",
+    Wind: "#b3dec1",
     Rock: "#e8c660",
     Electric: "#aa7eee",
     Grass: "#bacd84",
     Water: "#698ae8",
-    Fire: "#F0A762",
+    Fire: "#f0a762",
     Ice: "#b9dfe4",
 };
 
-export { elementColorMap };
+const elementRingMap: Record<string, string> = {
+    Wind: 'ring-Wind',
+    Rock: 'ring-Rock',
+    Electric: 'ring-Electric',
+    Grass: 'ring-Grass',
+    Water: 'ring-Water',
+    Fire: 'ring-Fire',
+    Ice: 'ring-Ice',
+  };
+
+export { elementColorMap, elementRingMap };

@@ -1,4 +1,4 @@
-import React, { FormEvent, useState, useEffect, useRef } from "react";
+import React, { FormEvent, useState, useEffect } from "react";
 import SearchIconButton from "../Icons/SearchIconButton";
 import { GenshinAccount, GenshinCharacter } from "../../Types/Genshin";
 import ShortCharacterList from "../CharacterList/ShortCharacterList";
@@ -17,7 +17,6 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
     const [isLoading, setIsLoading] = useState(false);
     const [previousUid, setPreviousUid] = useState<string | null>(null);
     const [userData, setUserData] = useState<GenshinAccount>();
-    const inputRef = useRef<HTMLInputElement>(null); // Add a ref for the input element
 
     useEffect(() => {
         const handleEscapeKey = (event: KeyboardEvent) => {
@@ -27,11 +26,6 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
         };
 
         document.addEventListener('keydown', handleEscapeKey);
-
-        // Focus on the input element when the component mounts
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
 
         return () => {
             document.removeEventListener('keydown', handleEscapeKey);
@@ -107,7 +101,6 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
                                     handleSearchClick();
                                 }
                             }}
-                            ref={inputRef} // Assign the ref to the input element
                         />
                         <div className="absolute top-1/2 transform -translate-y-1/2">
                             <label className={`btn btn-ghost btn-circle ${flash ? 'animate-shake animate-duration-[250ms]' : ''}`}>

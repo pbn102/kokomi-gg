@@ -12,6 +12,7 @@ export type GenshinCharacter = {
   level: number,
   max_level: number,
   characterPicUrl: string,
+  namecardUrl: string,
   constellation_level: number,
   element:  "Wind" | "Rock" | "Electric" | "Grass" | "Water" | "Fire" | "Ice";
   normal_attack: GenshinSkill,
