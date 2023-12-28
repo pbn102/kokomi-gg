@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 interface NavbarProps {
   themePreference: string;
-  setThemePreference: (arg0: string) => void;
+  setThemePreference: (theme: string) => void;
 }
 
 const Navbar = ({ themePreference, setThemePreference }: NavbarProps) => {

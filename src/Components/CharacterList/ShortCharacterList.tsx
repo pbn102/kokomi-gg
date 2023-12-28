@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { GenshinCharacter } from "../../Types/Genshin";
 import ShortCharacter from "../Character/ShortCharacter";
 
 interface ShortCharacterListProps {
     characterData: GenshinCharacter[];
     themePreference: string;
+    selectedCharacters: string[];
+    setSelectedCharacters: (selectedCharacters: string[]) => void;
 }
 
-const ShortCharacterList: React.FC<ShortCharacterListProps> = ({ characterData }) => {
-    const [selectedCharacters, setSelectedCharacters] = useState<string[]>([]);
-
+const ShortCharacterList: React.FC<ShortCharacterListProps> = ({ characterData, selectedCharacters, setSelectedCharacters }) => {
     const toggleCharacter = (name: string) => {
         if (selectedCharacters.includes(name)) {
             setSelectedCharacters(selectedCharacters.filter((char) => char !== name));

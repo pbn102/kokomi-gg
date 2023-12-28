@@ -1,21 +1,15 @@
-import { useState } from 'react';
-import { GenshinCharacter } from '../../Types/Genshin';
+import { GenshinAccount } from '../../Types/Genshin';
 import UidInputModal from '../UidInputModal/UidInputModal';
-import CharacterList from '../CharacterList/CharacterList';
 
 interface AddUserProps {
     themePreference: string;
+    userData: GenshinAccount | undefined;
+    setUserData: (data: GenshinAccount) => void;
 }
-const AddUser = ({ themePreference }: AddUserProps) => {
-    const [characterData, setCharacterData] = useState<GenshinCharacter[]>([]);
-
-    const populateCharacters = (characters: GenshinCharacter[]) => {
-        setCharacterData(characters);
-    };
-
+const AddUser = ({ themePreference, setUserData }: AddUserProps) => {
     return (
         <div>
-            {characterData.length > 0 ? <CharacterList characters={characterData} themePreference={themePreference} /> : <div className="fixed hero min-h-screen">
+            <div className="fixed hero h-screen">
                 <div className="hero-content text-center">
                     <div>
                         <h1 className="text-5xl font-bold">No Characters Found.</h1>
@@ -28,15 +22,14 @@ const AddUser = ({ themePreference }: AddUserProps) => {
                             </label>
                             <UidInputModal
                                 themePreference={themePreference}
-                                characterData={characterData}
-                                populateCharacters={populateCharacters}
+                                setUserData={setUserData}
                             />
                             <div className="divider lg:divider-horizontal">OR</div>
                             <div className="h-20 rounded-box btn">Import Characters from JSON</div>
                         </div>
                     </div>
                 </div>
-            </div>}
+            </div>
         </div>
     );
 };

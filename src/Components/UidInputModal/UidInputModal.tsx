@@ -6,17 +6,17 @@ import ShortUserInfo from "../UserInfo/ShortUserInfo";
 import './CustomScrollBar.css';
 
 interface UidInputModalProps {
-    characterData: GenshinCharacter[];
-    populateCharacters: (characters: GenshinCharacter[]) => void;
+    setUserData: (user: GenshinAccount) => void;
     themePreference: string;
 };
 
-const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCharacters, themePreference }) => {
+const UidInputModal: React.FC<UidInputModalProps> = ({ setUserData, themePreference }) => {
     const [uid, setUid] = useState('');
     const [flash, setFlash] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [previousUid, setPreviousUid] = useState<string | null>(null);
-    const [userData, setUserData] = useState<GenshinAccount>();
+    const [fetchedUserData, setFetchedUserData] = useState<GenshinAccount>();
+    const [selectedCharacters, setSelectedCharacters] = useState<string[]>([]);
 
     useEffect(() => {
         const handleEscapeKey = (event: KeyboardEvent) => {
@@ -64,8 +64,7 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
                 return data.json();
             })
             .then((userData: GenshinAccount) => {
-                populateCharacters(userData.characters);
-                setUserData(userData);
+                setFetchedUserData(userData);
             })
             .catch((error) => {
                 console.error(error);
@@ -82,6 +81,45 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
             uidModalCheckbox.checked = false;
         }
     };
+
+    const selectAllCharacters = () => {
+        const allCharacters = fetchedUserData?.characters || [];
+        const allCharacterNames = allCharacters.map((character: GenshinCharacter) => character.name);
+
+        setSelectedCharacters(allCharacterNames);
+    };
+
+    const deselectAllCharacters = () => {
+        setSelectedCharacters([]);
+    };
+
+    const importSelectedCharacters = () => {
+        if (!fetchedUserData) {
+            // Handle the case where fetchedUserData is undefined
+            console.error('fetchedUserData is undefined');
+            return;
+        }
+        // Assuming fetchedUserData is defined and has a property 'characters'
+        const allCharacters = fetchedUserData.characters || [];
+
+        // Create a new array of characters with updated selection status
+        const selectedCharactersData = allCharacters.filter((character: GenshinCharacter) =>
+            selectedCharacters.includes(character.name)
+        );
+
+        // Create a new user data object with the updated characters array
+        const updatedUserData: GenshinAccount = {
+            ...fetchedUserData,
+            characters: selectedCharactersData,
+        };
+
+        // Update the user data state
+        setUserData(updatedUserData);
+
+        // Close the modal or perform any other necessary actions
+        closeUidModal();
+    };
+
 
     return (
         <div>
@@ -111,18 +149,31 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ characterData, populateCh
                             </label>
                         </div>
                     </div>
-                    {userData && characterData.length > 0 ? (
-                        <div className="py-6">
+                    {fetchedUserData && fetchedUserData.characters.length > 0 ? (
+                        <div className="pt-6">
                             <h2 className="text-xl font-semibold">Select Characters to Import</h2>
                             <ShortUserInfo
-                                name={userData.name}
-                                picUrl={userData.profilePicUrl}
-                                adventureRank={userData.adventure_rank}
-                                worldLevel={userData.world_level}
-                                signature={userData.signature}
+                                name={fetchedUserData.name}
+                                picUrl={fetchedUserData.profilePicUrl}
+                                adventureRank={fetchedUserData.adventure_rank}
+                                worldLevel={fetchedUserData.world_level}
+                                signature={fetchedUserData.signature}
                             />
                             <div className="flex justify-center mt-4">
-                                <ShortCharacterList characterData={characterData} themePreference={themePreference} />
+                                <ShortCharacterList characterData={fetchedUserData.characters} themePreference={themePreference} selectedCharacters={selectedCharacters} setSelectedCharacters={setSelectedCharacters} />
+                            </div>
+                            <div className="px-3 pt-3 flex justify-between">
+                                <button className="btn btn-error" onClick={deselectAllCharacters}>
+                                    Clear
+                                </button>
+                                <div>
+                                    <button className="btn" onClick={selectAllCharacters}>
+                                        Select All
+                                    </button>
+                                    <button className="btn btn-success ml-3" onClick={importSelectedCharacters}>
+                                        Import
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ) : null}

@@ -1,3 +1,11 @@
+import AnemoIcon from "../Components/Icons/Elements/AnemoIcon";
+import CryoIcon from "../Components/Icons/Elements/CryoIcon";
+import DendroIcon from "../Components/Icons/Elements/DendroIcon";
+import ElectroIcon from "../Components/Icons/Elements/ElectroIcon";
+import GeoIcon from "../Components/Icons/Elements/GeoIcon";
+import HydroIcon from "../Components/Icons/Elements/HydroIcon";
+import PyroIcon from "../Components/Icons/Elements/PyroIcon";
+
 enum GenshinElement {
     Wind = "Wind",
     Rock = "Rock",
@@ -19,13 +27,24 @@ const elementColorMap: Record<GenshinElement, string> = {
 };
 
 const elementRingMap: Record<string, string> = {
-    Wind: 'ring-Wind',
-    Rock: 'ring-Rock',
-    Electric: 'ring-Electric',
-    Grass: 'ring-Grass',
-    Water: 'ring-Water',
-    Fire: 'ring-Fire',
-    Ice: 'ring-Ice',
-  };
+	Wind: "ring-Wind",
+	Rock: "ring-Rock",
+	Electric: "ring-Electric",
+	Grass: "ring-Grass",
+	Water: "ring-Water",
+	Fire: "ring-Fire",
+	Ice: "ring-Ice",
+};
+  
+const elementIconMap: Record<GenshinElement, React.ComponentType> = {
+    Wind: AnemoIcon,
+	Rock: GeoIcon,
+	Electric: ElectroIcon,
+	Grass: DendroIcon,
+	Water: HydroIcon,
+	Fire: PyroIcon,
+	Ice: CryoIcon,
+};
 
-export { elementColorMap, elementRingMap };
+
+export { elementColorMap, elementRingMap, elementIconMap };

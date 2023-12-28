@@ -5,7 +5,7 @@ export type GenshinAccount = {
   signature: string,
   profilePicUrl: string,
   characters: GenshinCharacter[]
-}
+};
 
 export type GenshinCharacter = {
   name: string,
@@ -27,7 +27,7 @@ export type GenshinCharacter = {
   energy_recharge: number,
   elemental_dmg_bonus: number,
   is_physical: boolean
-}
+};
 
 export type GenshinSkill = {
   name: string,
@@ -35,4 +35,4 @@ export type GenshinSkill = {
   extra: number,
   level: number,
   skillPicUrl: string
-}
+};
