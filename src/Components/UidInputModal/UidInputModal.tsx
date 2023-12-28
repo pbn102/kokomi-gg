@@ -1,9 +1,10 @@
-import React, { FormEvent, useState, useEffect } from "react";
+import React, { FormEvent, useState } from "react";
 import SearchIconButton from "../Icons/SearchIconButton";
 import { GenshinAccount, GenshinCharacter } from "../../Types/Genshin";
 import ShortCharacterList from "../CharacterList/ShortCharacterList";
 import ShortUserInfo from "../UserInfo/ShortUserInfo";
 import './CustomScrollBar.css';
+import Modal from "../Modal/Modal";
 
 interface UidInputModalProps {
     setUserData: (user: GenshinAccount) => void;
@@ -17,20 +18,6 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ setUserData, themePrefere
     const [previousUid, setPreviousUid] = useState<string | null>(null);
     const [fetchedUserData, setFetchedUserData] = useState<GenshinAccount>();
     const [selectedCharacters, setSelectedCharacters] = useState<string[]>([]);
-
-    useEffect(() => {
-        const handleEscapeKey = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                closeUidModal();
-            }
-        };
-
-        document.addEventListener('keydown', handleEscapeKey);
-
-        return () => {
-            document.removeEventListener('keydown', handleEscapeKey);
-        };
-    }, []);
 
     const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
         const inputElement = event.target as HTMLInputElement;
@@ -75,13 +62,6 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ setUserData, themePrefere
             });
     };
 
-    const closeUidModal = () => {
-        const uidModalCheckbox = document.getElementById('uid_modal') as HTMLInputElement;
-        if (uidModalCheckbox) {
-            uidModalCheckbox.checked = false;
-        }
-    };
-
     const selectAllCharacters = () => {
         const allCharacters = fetchedUserData?.characters || [];
         const allCharacterNames = allCharacters.map((character: GenshinCharacter) => character.name);
@@ -95,95 +75,85 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ setUserData, themePrefere
 
     const importSelectedCharacters = () => {
         if (!fetchedUserData) {
-            // Handle the case where fetchedUserData is undefined
             console.error('fetchedUserData is undefined');
             return;
         }
-        // Assuming fetchedUserData is defined and has a property 'characters'
-        const allCharacters = fetchedUserData.characters || [];
 
-        // Create a new array of characters with updated selection status
+        const allCharacters = fetchedUserData.characters || [];
         const selectedCharactersData = allCharacters.filter((character: GenshinCharacter) =>
             selectedCharacters.includes(character.name)
         );
 
-        // Create a new user data object with the updated characters array
         const updatedUserData: GenshinAccount = {
             ...fetchedUserData,
             characters: selectedCharactersData,
         };
 
-        // Update the user data state
         setUserData(updatedUserData);
-
-        // Close the modal or perform any other necessary actions
         closeUidModal();
     };
 
+    const closeUidModal = () => {
+        const uidModalCheckbox = document.getElementById('uid_modal') as HTMLInputElement;
+        if (uidModalCheckbox) {
+            uidModalCheckbox.checked = false;
+        }
+    };
 
     return (
-        <div>
-            <input type="checkbox" id="uid_modal" className="modal-toggle" />
-            <div className="modal modal-bottom sm:modal-middle" role="dialog">
-                <div className="modal-box w-full sm:max-w-5xl min-h-1/3 uid-input-modal-container">
-                    <h3 className="font-bold text-lg text-left pb-3">Enter UID</h3>
-                    <div className="relative flex items-center">
-                        <input
-                            type="text"
-                            placeholder="UID"
-                            className={`rounded-box input input-bordered pl-12 ${flash ? 'input-error animate-shake animate-duration-[250ms]' : ''}`}
-                            value={uid}
-                            onInput={handleInputChange}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    handleSearchClick();
-                                }
-                            }}
-                        />
-                        <div className="absolute top-1/2 transform -translate-y-1/2">
-                            <label className={`btn btn-ghost btn-circle ${flash ? 'animate-shake animate-duration-[250ms]' : ''}`}>
-                                {isLoading ?
-                                    <span className="loading loading-spinner"></span> :
-                                    <SearchIconButton onClick={handleSearchClick} />
-                                }
-                            </label>
-                        </div>
-                    </div>
-                    {fetchedUserData && fetchedUserData.characters.length > 0 ? (
-                        <div className="pt-6">
-                            <h2 className="text-xl font-semibold">Select Characters to Import</h2>
-                            <ShortUserInfo
-                                name={fetchedUserData.name}
-                                picUrl={fetchedUserData.profilePicUrl}
-                                adventureRank={fetchedUserData.adventure_rank}
-                                worldLevel={fetchedUserData.world_level}
-                                signature={fetchedUserData.signature}
-                            />
-                            <div className="flex justify-center mt-4">
-                                <ShortCharacterList characterData={fetchedUserData.characters} themePreference={themePreference} selectedCharacters={selectedCharacters} setSelectedCharacters={setSelectedCharacters} />
-                            </div>
-                            <div className="px-3 pt-3 flex justify-between">
-                                <button className="btn btn-error" onClick={deselectAllCharacters}>
-                                    Clear
-                                </button>
-                                <div>
-                                    <button className="btn" onClick={selectAllCharacters}>
-                                        Select All
-                                    </button>
-                                    <button className="btn btn-success ml-3" onClick={importSelectedCharacters}>
-                                        Import
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ) : null}
-                    <label htmlFor="uid_modal" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                        ✕
+        <Modal modal_id="uid_modal" customClass="sm:max-w-5xl">
+            <h3 className="font-bold text-lg text-left pb-3">Enter UID</h3>
+            <div className="relative flex items-center">
+                <input
+                    type="text"
+                    placeholder="UID"
+                    className={`rounded-box input input-bordered pl-12 ${flash ? 'input-error animate-shake animate-duration-[250ms]' : ''}`}
+                    value={uid}
+                    onInput={handleInputChange}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            handleSearchClick();
+                        }
+                    }}
+                />
+                <div className="absolute top-1/2 transform -translate-y-1/2">
+                    <label className={`btn btn-ghost btn-circle ${flash ? 'animate-shake animate-duration-[250ms]' : ''}`}>
+                        {isLoading ?
+                            <span className="loading loading-spinner"></span> :
+                            <SearchIconButton onClick={handleSearchClick} />
+                        }
                     </label>
                 </div>
-                <label htmlFor="uid_modal" className="modal-backdrop"></label>
             </div>
-        </div>
+            {fetchedUserData && fetchedUserData.characters.length > 0 ? (
+                <div className="pt-6">
+                    <h2 className="text-xl font-semibold">Select Characters to Import</h2>
+                    <ShortUserInfo
+                        name={fetchedUserData.name}
+                        picUrl={fetchedUserData.profilePicUrl}
+                        adventureRank={fetchedUserData.adventure_rank}
+                        worldLevel={fetchedUserData.world_level}
+                        signature={fetchedUserData.signature}
+                    />
+                    <div className="flex justify-center mt-4">
+                        <ShortCharacterList characterData={fetchedUserData.characters} themePreference={themePreference} selectedCharacters={selectedCharacters} setSelectedCharacters={setSelectedCharacters} />
+                    </div>
+                    <div className="px-3 pt-3 flex justify-between">
+                        <button className="btn btn-error" onClick={deselectAllCharacters}>
+                            Clear
+                        </button>
+                        <div>
+                            <button className="btn" onClick={selectAllCharacters}>
+                                Select All
+                            </button>
+                            <button className="btn btn-success ml-3" onClick={importSelectedCharacters}>
+                                Import
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
+        </Modal>
     );
 };
 

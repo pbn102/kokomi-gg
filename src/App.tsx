@@ -52,7 +52,7 @@ const App = () => {
         themePreference={themePreference}
         setThemePreference={setThemePreference} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home userData={userData} />} />
         <Route path="/characters" element={<Characters themePreference={themePreference} userData={userData} setUserData={setUserData} loadingUserData={loadingUserData}/>} />
         <Route path="/info" element={<Info />} />
       </Routes>

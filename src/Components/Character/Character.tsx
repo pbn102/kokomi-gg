@@ -69,7 +69,6 @@ const Character: React.FC<CharacterProps> = ({
                     <img
                         src={characterPicUrl}
                         alt={name}
-                        loading="eager"
                         className={`avatar rounded-full ring ${ringClass} w-20`}
                     />
                     <div className="flex flex-col pl-4">

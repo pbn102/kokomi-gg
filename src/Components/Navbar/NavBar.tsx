@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 interface NavbarProps {
@@ -8,6 +8,8 @@ interface NavbarProps {
 
 const Navbar = ({ themePreference, setThemePreference }: NavbarProps) => {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.onscroll = () => {
@@ -17,40 +19,54 @@ const Navbar = ({ themePreference, setThemePreference }: NavbarProps) => {
         setScrolled(false);
       }
     };
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
   }, []);
 
   return (
-    <div className={ scrolled ? "navbar bg-base-100 sticky top-0 z-50 shadow-md" : "navbar bg-base-100"}>
+    <div className={scrolled ? "navbar bg-base-100 sticky top-0 z-50 shadow-md" : "navbar bg-base-100"}>
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost">
+          <div tabIndex={0} role="button" className="btn btn-ghost" onClick={() => setOpen(!open)}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
             </svg>
           </div>
-          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-            <li>
-              <NavLink to="/" className={({ isActive }) => (isActive ? "font-bold" : "font-regular")}>
-                Notes
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/characters" className={({ isActive }) => (isActive ? "font-bold" : "font-regular")}>
-                Characters
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/info" className={({ isActive }) => (isActive ? "font-bold" : "font-regular")}>
-                Info
-              </NavLink>
-            </li>
-          </ul>
+          <div className={`${open ? "" : "hidden"}`}>
+            <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[100] p-2 shadow bg-base-100 rounded-box w-52">
+              <li>
+                <NavLink to="/" className={({ isActive }) => (isActive ? "font-bold" : "font-regular")}>
+                  Notes
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/characters" className={({ isActive }) => (isActive ? "font-bold" : "font-regular")}>
+                  Characters
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/info" className={({ isActive }) => (isActive ? "font-bold" : "font-regular")}>
+                  Info
+                </NavLink>
+              </li>
+            </ul>
+          </div>
         </div>
         <NavLink to="/" className="btn btn-ghost text-xl">
           Notes App
         </NavLink>
       </div>
-      <div className="navbar-center hidden lg:flex">
+      <div className={`navbar-center hidden lg:flex ${open ? "" : "hidden"}`}>
         <ul className="menu menu-horizontal px-1">
           <li>
             <NavLink to="/" className={({ isActive }) => (isActive ? "font-bold" : "font-regular")}>

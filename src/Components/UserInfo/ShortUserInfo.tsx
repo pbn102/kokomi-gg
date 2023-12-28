@@ -15,7 +15,6 @@ const ShortUserInfo: React.FC<ShortUserInfoProps> = ({ name, picUrl, adventureRa
                 <img
                     src={picUrl}
                     alt={name}
-                    loading="eager"
                     className="avatar rounded-full w-full h-full"
                 />
             </div>
