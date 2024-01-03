@@ -67,7 +67,7 @@ const Navbar = ({ themePreference, setThemePreference }: NavbarProps) => {
         </NavLink>
       </div>
       <div className={`navbar-center hidden lg:flex ${open ? "" : "hidden"}`}>
-        <ul className="menu menu-horizontal px-1">
+        <ul tabIndex={0} className="menu menu-horizontal px-1">
           <li>
             <NavLink to="/" className={({ isActive }) => (isActive ? "font-bold" : "font-regular")}>
               Home
