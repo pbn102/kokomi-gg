@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import AddNote from "../../Components/AddNote/AddNote";
 import Note from "../../Components/Note/Note"; // Make sure to import the Note component
 import { GenshinAccount } from "../../Types/Genshin";
