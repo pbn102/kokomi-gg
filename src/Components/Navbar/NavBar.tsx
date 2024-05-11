@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import RefreshCharacters from '../RefreshCharacters/RefreshCharacters';
+import { GenshinAccount } from '../../Types/Genshin';
 
 interface NavbarProps {
   themePreference: string;
   setThemePreference: (theme: string) => void;
+  userData: GenshinAccount | undefined;
+  updateUserData: (user: GenshinAccount) => void;
 }
 
-const Navbar = ({ themePreference, setThemePreference }: NavbarProps) => {
+const Navbar = ({ themePreference, setThemePreference, userData, updateUserData }: NavbarProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -85,7 +89,8 @@ const Navbar = ({ themePreference, setThemePreference }: NavbarProps) => {
           </li>
         </ul>
       </div>
-      <div className="navbar-end">
+      <div className="navbar-end space-x-2">
+        {userData ? <RefreshCharacters userData={userData} updateUserData={updateUserData} /> : null}
         <label className="swap swap-rotate invisible md:visible">
           <input
             type="checkbox"

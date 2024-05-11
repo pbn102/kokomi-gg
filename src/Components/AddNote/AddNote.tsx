@@ -13,11 +13,11 @@ import UserIcon from "../Icons/Assets/UserIcon";
 
 interface AddNoteProps {
     onSubmit: (note: GenshinNote) => void;
-    characters: GenshinCharacter[];
+    characters:  { [name: string]: GenshinCharacter };
 };
 
 const AddNote: React.FC<AddNoteProps> = ({ onSubmit, characters }) => {
-    const [selectedCharacter, setSelectedCharacter] = useState<GenshinCharacter | null>(characters[0] ?? null);
+    const [selectedCharacter, setSelectedCharacter] = useState<GenshinCharacter | null>(Object.values(characters)[0] ?? null);
     const [labels, setlabels] = useState<string[]>([]);
     function handleCharactersClick() {
         console.log("Character Clicked!");
@@ -125,7 +125,7 @@ const AddNote: React.FC<AddNoteProps> = ({ onSubmit, characters }) => {
             icon: <UserIcon />,
             onClick: () => handleCharactersClick(),
             content: <Dropdown
-                options={characters}
+                options={Object.values(characters)}
                 selectedOption={selectedCharacter}
                 onSelect={setSelectedCharacter}
                 renderOption={renderCharacterOption}

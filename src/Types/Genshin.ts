@@ -1,10 +1,11 @@
 export type GenshinAccount = {
   name: string,
+  uid: number,
   adventure_rank: number,
   world_level: number,
   signature: string,
   profilePicUrl: string,
-  characters: GenshinCharacter[]
+  characters: { [name: string]: GenshinCharacter }
 };
 
 export type GenshinCharacter = {

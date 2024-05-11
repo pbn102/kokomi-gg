@@ -25,8 +25,7 @@ const App = () => {
   });
 
   useEffect(() => {
-    // const storedUserData = localStorage.getItem("user");
-    const storedUserData = undefined;
+    const storedUserData = localStorage.getItem("user");
 
     if (storedUserData) {
       try {
@@ -59,15 +58,21 @@ const App = () => {
     setNotes([...notes, newNote]);
   }
 
+  const handleUserData = (newUserData: GenshinAccount) => {
+    setUserData({...newUserData});
+  }
+
 
   return (
     <BrowserRouter>
       <Navbar
         themePreference={themePreference}
-        setThemePreference={setThemePreference} />
+        setThemePreference={setThemePreference}
+        userData={userData}
+        updateUserData={handleUserData} />
       <Routes>
         <Route path="/" element={<Home userData={userData} loadingUserData={loadingData} notes={notes} addNote={addNote} />} />
-        <Route path="/characters" element={<Characters themePreference={themePreference} userData={userData} setUserData={setUserData} loadingUserData={loadingData} />} />
+        <Route path="/characters" element={<Characters themePreference={themePreference} userData={userData} setUserData={handleUserData} loadingUserData={loadingData} />} />
         <Route path="/info" element={<Info />} />
       </Routes>
     </BrowserRouter>

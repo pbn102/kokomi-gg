@@ -63,8 +63,8 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ setUserData, themePrefere
     };
 
     const selectAllCharacters = () => {
-        const allCharacters = fetchedUserData?.characters || [];
-        const allCharacterNames = allCharacters.map((character: GenshinCharacter) => character.name);
+        const allCharacters = fetchedUserData?.characters || {};
+        const allCharacterNames = Object.keys(allCharacters);
 
         setSelectedCharacters(allCharacterNames);
     };
@@ -79,10 +79,13 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ setUserData, themePrefere
             return;
         }
 
-        const allCharacters = fetchedUserData.characters || [];
-        const selectedCharactersData = allCharacters.filter((character: GenshinCharacter) =>
-            selectedCharacters.includes(character.name)
-        );
+        const allCharacters = fetchedUserData.characters || {};
+        const selectedCharactersData = Object.keys(allCharacters)
+            .filter(name => selectedCharacters.includes(name))
+            .reduce((obj, key) => {
+                obj[key] = allCharacters[key];
+                return obj;
+            }, {} as { [name: string]: GenshinCharacter });
 
         const updatedUserData: GenshinAccount = {
             ...fetchedUserData,
@@ -125,7 +128,7 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ setUserData, themePrefere
                     </label>
                 </div>
             </div>
-            {fetchedUserData && fetchedUserData.characters.length > 0 ? (
+            {fetchedUserData && Object.keys(fetchedUserData.characters).length > 0 ? (
                 <div className="pt-6">
                     <h2 className="text-xl font-semibold">Select Characters to Import</h2>
                     <ShortUserInfo
@@ -136,7 +139,7 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ setUserData, themePrefere
                         signature={fetchedUserData.signature}
                     />
                     <div className="flex justify-center mt-4">
-                        <ShortCharacterList characterData={fetchedUserData.characters} themePreference={themePreference} selectedCharacters={selectedCharacters} setSelectedCharacters={setSelectedCharacters} />
+                        <ShortCharacterList characterData={Object.values(fetchedUserData.characters)} themePreference={themePreference} selectedCharacters={selectedCharacters} setSelectedCharacters={setSelectedCharacters} />
                     </div>
                     <div className="px-3 pt-3 flex justify-between">
                         <button className="btn btn-error" onClick={deselectAllCharacters}>

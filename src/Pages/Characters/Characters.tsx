@@ -16,7 +16,7 @@ const Characters = ({ themePreference, userData, setUserData, loadingUserData }:
       {loadingUserData ? (
         <LoadingPage />
       ) : userData ? (
-        <CharacterList characters={userData.characters} themePreference={themePreference} />
+          <CharacterList characters={userData.characters} themePreference={themePreference} />
       ) : (
         <AddUser themePreference={themePreference} userData={userData} setUserData={setUserData} />
       )}

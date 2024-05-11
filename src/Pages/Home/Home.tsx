@@ -19,7 +19,7 @@ const Home: React.FC<HomeProps> = ({ userData, loadingUserData, notes, addNote }
         <LoadingPage />
       ) : (
         <>
-          <AddNote onSubmit={addNote} characters={userData ? userData.characters : []} />
+          <AddNote onSubmit={addNote} characters={userData ? userData.characters : {}} />
           {notes.map((note, index) => (
             <Note key={index} note={note} />
           ))}
