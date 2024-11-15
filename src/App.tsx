@@ -6,6 +6,7 @@ import Info from "./Pages/Info/Info";
 import { useState, useEffect } from "react";
 import { GenshinAccount } from "./Types/Genshin";
 import { GenshinNote } from "./Types/Note";
+import { ToastProvider } from "./Components/Toast/ToastContext";
 
 const App = () => {
   const getSystemThemePreference = () => {
@@ -64,18 +65,20 @@ const App = () => {
 
 
   return (
-    <BrowserRouter>
-      <Navbar
-        themePreference={themePreference}
-        setThemePreference={setThemePreference}
-        userData={userData}
-        updateUserData={handleUserData} />
-      <Routes>
-        <Route path="/" element={<Home userData={userData} loadingUserData={loadingData} notes={notes} addNote={addNote} />} />
-        <Route path="/characters" element={<Characters themePreference={themePreference} userData={userData} setUserData={handleUserData} loadingUserData={loadingData} />} />
-        <Route path="/info" element={<Info />} />
-      </Routes>
-    </BrowserRouter>
+    <ToastProvider>
+      <BrowserRouter>
+        <Navbar
+          themePreference={themePreference}
+          setThemePreference={setThemePreference}
+          userData={userData}
+          updateUserData={handleUserData} />
+        <Routes>
+          <Route path="/" element={<Home userData={userData} loadingUserData={loadingData} notes={notes} addNote={addNote} />} />
+          <Route path="/characters" element={<Characters themePreference={themePreference} userData={userData} setUserData={handleUserData} loadingUserData={loadingData} />} />
+          <Route path="/info" element={<Info />} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   );
 };
 

@@ -5,6 +5,7 @@ import ShortCharacterList from "../CharacterList/ShortCharacterList";
 import ShortUserInfo from "../UserInfo/ShortUserInfo";
 import './CustomScrollBar.css';
 import Modal from "../Modal/Modal";
+import { showToast } from "../Toast/ToastContext";
 
 interface UidInputModalProps {
     setUserData: (user: GenshinAccount) => void;
@@ -53,9 +54,9 @@ const UidInputModal: React.FC<UidInputModalProps> = ({ setUserData, themePrefere
             .then((userData: GenshinAccount) => {
                 setFetchedUserData(userData);
             })
-            .catch((error) => {
-                console.error(error);
-                // TODO: Call showToast with an appropriate message
+            .catch((error: Error) => {
+                console.error(error.message);
+                showToast("Failed to fetch UID", "error");
             })
             .finally(() => {
                 setIsLoading(false);

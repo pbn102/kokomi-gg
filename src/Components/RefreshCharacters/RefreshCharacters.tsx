@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { GenshinAccount } from "../../Types/Genshin";
+import { GenshinAccount, GenshinCharacter } from "../../Types/Genshin";
+import { showToast } from "../Toast/ToastContext";
 
 interface RefreshCharactersProps {
     userData: GenshinAccount;
@@ -24,11 +25,12 @@ const RefreshCharacters: React.FC<RefreshCharactersProps> = ({ userData, updateU
                 return data.json();
             })
             .then((fetchedData: GenshinAccount) => {
-                syncCharacterData(userData, fetchedData)
+                syncCharacterData(userData, fetchedData);
+                showToast("Characters Refreshed!", "success");
             })
             .catch((error) => {
                 console.error(error);
-                // TODO: Call showToast with an appropriate message
+                showToast("Failed to refresh characters", "error");
             })
             .finally(() => {
                 setIsLoading(false);
@@ -41,7 +43,7 @@ const RefreshCharacters: React.FC<RefreshCharactersProps> = ({ userData, updateU
             return;
         }
     
-        const originalCharacterNames = Object.keys(originalUser.characters);
+        const originalCharacterNames = Object.values(originalUser.characters).map((character: GenshinCharacter) => character.name);
         const updatedCharacterNames = Object.keys(updatedUser.characters);
     
         const allCharacterNames = [...new Set([...originalCharacterNames, ...updatedCharacterNames])];
