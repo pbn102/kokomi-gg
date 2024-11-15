@@ -47,9 +47,7 @@ const App = () => {
 
   useEffect(() => {
     if (userData) {
-      console.log(userData);
       localStorage.setItem("user", JSON.stringify(userData));
-      console.log("user data updated");
     }
   }, [userData]);
 
@@ -62,11 +60,8 @@ const App = () => {
   }
 
   const handleUserData = (newUserData: GenshinAccount) => {
-    setUserData((prevData) => ({
-      ...prevData,
-      ...newUserData,
-  }));  }
-
+    setUserData({...newUserData});  
+  }
 
   return (
     <ToastProvider>
