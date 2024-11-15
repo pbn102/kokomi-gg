@@ -47,7 +47,9 @@ const App = () => {
 
   useEffect(() => {
     if (userData) {
+      console.log(userData);
       localStorage.setItem("user", JSON.stringify(userData));
+      console.log("user data updated");
     }
   }, [userData]);
 
@@ -60,8 +62,10 @@ const App = () => {
   }
 
   const handleUserData = (newUserData: GenshinAccount) => {
-    setUserData({...newUserData});
-  }
+    setUserData((prevData) => ({
+      ...prevData,
+      ...newUserData,
+  }));  }
 
 
   return (

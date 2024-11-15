@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GenshinAccount, GenshinCharacter } from "../../Types/Genshin";
+import { GenshinAccount } from "../../Types/Genshin";
 import { showToast } from "../Toast/ToastContext";
 
 interface RefreshCharactersProps {
@@ -43,7 +43,7 @@ const RefreshCharacters: React.FC<RefreshCharactersProps> = ({ userData, updateU
             return;
         }
     
-        const originalCharacterNames = Object.values(originalUser.characters).map((character: GenshinCharacter) => character.name);
+        const originalCharacterNames = Object.keys(originalUser.characters);
         const updatedCharacterNames = Object.keys(updatedUser.characters);
     
         const allCharacterNames = [...new Set([...originalCharacterNames, ...updatedCharacterNames])];
@@ -51,7 +51,7 @@ const RefreshCharacters: React.FC<RefreshCharactersProps> = ({ userData, updateU
         for (const name of allCharacterNames) {
             const originalCharacter = originalUser.characters[name];
             const updatedCharacter = updatedUser.characters[name];
-    
+
             // Check if the character exists in both original and updated user's data
             if (originalCharacter && updatedCharacter) {
                 // Update the original character data with the updated character data
@@ -60,7 +60,8 @@ const RefreshCharacters: React.FC<RefreshCharactersProps> = ({ userData, updateU
             } else if (originalCharacter) {
                 console.log(`Character '${name}' is missing in the updated data.`);
             } else if (updatedCharacter) {
-                console.log(`Character '${name}' is missing in the original data.`);
+                originalUser.characters[name] = updatedCharacter;
+                console.log(`Character '${name}' has been added to the account.`);
             }
         }
     
